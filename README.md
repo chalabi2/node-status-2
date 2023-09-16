@@ -1,28 +1,23 @@
-# React + TypeScript + Vite
+# Node Status Monitor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple node status monitor to be used internally at [Chandra Station](https://chandrastation.com)
 
-Currently, two official plugins are available:
+## Design
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Front End
 
-## Expanding the ESLint configuration
+Built with vite, emotion, react, typescript, and bun.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Back End
 
-- Configure the top-level `parserOptions` property like this:
+Express for the server, bun sqlite for the database.
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+### Running
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
-# node-status-2
+Everything is setup to work on internal servers and self signed TLS certs so running in local dev will require some changes.
+
+### Overview
+
+The sql-lite database is bootstrapped with data from `machines.json` this is a file in `.gitignore` that contains our machines IP address and the ports we want to monitor. The express server then can make GET requests to fetch the status of each machine, POST requests to add more machines or DELETE requests to remove machines. The database is only accessible via the express sever and the express server only responds to requests if the user authenticates with a password on the front end.
+
+The application makes calls to exposed endpoints for internal purposes so nginx handles the TLS and reverse proxying alongside Cloudflare to provide full end to end encryption.
